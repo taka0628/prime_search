@@ -1,0 +1,19 @@
+name: TEST
+
+on:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: install
+        run: |
+          sudo apt install g++
+      - name: build
+        run: |
+          make
+      - name: run
+        run: |
+          make run
