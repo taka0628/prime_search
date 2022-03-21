@@ -1,3 +1,4 @@
+#include <chrono>
 #include <iostream>
 #include <math.h>
 #include <pthread.h>
@@ -21,7 +22,9 @@ void* isPrime(void* arg)
     for (uint64_t i = data->st_; i <= data->ed_; i += 2) {
         temp = data->num_ % i;
         if (temp == 0) {
-            data->is_prime_ = true;
+            data->is_prime_ = false;
+            // cout << data->num_ << "is not prime" << endl;
+            // cout << "i: " << i << endl;
             return nullptr;
         }
     }
@@ -51,35 +54,49 @@ int main(int argc, char* argv[])
         cin >> times;
     }
 
+    auto start = chrono::system_clock::now();
+
     vector<thread_arg> th(thread::hardware_concurrency() * 2);
-    while (times--) {
+    while (times) {
         num = mt();
+        // num = 99989;
         if (num % 2 == 0) {
             num++;
         }
         // cout << "num: " << num << endl;
-        uint64_t sq_num = sqrt(static_cast<double>(num));
+        long double sq_num = sqrt(static_cast<double>(num));
 
         for (size_t i = 0; i < th.size(); i++) {
             th[i].num_ = num;
             th[i].st_  = sq_num / th.size() * i;
+            th[i].st_  = ((th[i].st_ <= 1) ? 3 : th[i].st_);
+            th[i].ed_  = th[i].st_ + (sq_num / th.size());
             if (th[i].st_ % 2 == 0) {
                 th[i].st_++;
             }
-            th[i].ed_       = th[i].st_ + sq_num / th.size() * (i + 1);
-            th[i].is_prime_ = false;
+            th[i].is_prime_ = true;
+            // print_thread_arg(th[i]);
             pthread_create(&th[i].th_, NULL, isPrime, &th[i]);
         }
         for (size_t i = 0; i < th.size(); i++) {
             pthread_join(th[i].th_, NULL);
         }
+        bool is_prime = true;
         for (size_t i = 0; i < th.size(); i++) {
-            if (th[i].is_prime_) {
-                cout << num << " is prime" << endl;
+            if (th[i].is_prime_ == false) {
+                is_prime = false;
                 break;
             }
         }
+        if (is_prime) {
+            cout << num << " is prime" << endl;
+            times--;
+        }
     }
+    auto end  = chrono::system_clock::now();
+    auto time = end - start;
+    auto msec = chrono::duration_cast<chrono::milliseconds>(time).count();
+    cout << msec << "[msec]" << endl;
 
     return 0;
 }
