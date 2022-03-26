@@ -6,12 +6,15 @@
 #include <thread>
 #include <vector>
 
+// #define DEBUG
+
 typedef struct thread_arg {
     pthread_t th_;
+    pthread_mutex_t mutex_;
     std::uint64_t num_;
     std::uint64_t st_;
     std::uint64_t ed_;
-    bool is_prime_;
+    bool* can_divide_;
 };
 
 void* isPrime(void* arg)
@@ -22,9 +25,14 @@ void* isPrime(void* arg)
     for (uint64_t i = data->st_; i <= data->ed_; i += 2) {
         temp = data->num_ % i;
         if (temp == 0) {
-            data->is_prime_ = false;
-            // cout << data->num_ << "is not prime" << endl;
-            // cout << "i: " << i << endl;
+            pthread_mutex_lock(&data->mutex_);
+            *data->can_divide_ = true;
+            pthread_mutex_unlock(&data->mutex_);
+
+#ifdef DEBUG
+            cout << data->num_ << "is not prime" << endl;
+            cout << "i: " << i << endl;
+#endif
             return nullptr;
         }
     }
@@ -57,8 +65,11 @@ int main(int argc, char* argv[])
     auto start = chrono::system_clock::now();
 
     vector<thread_arg> th(thread::hardware_concurrency() * 2);
+    bool can_divide = false;
+
     while (times) {
-        num = mt();
+        num        = mt();
+        can_divide = false;
         // num = 99989;
         if (num % 2 == 0) {
             num++;
@@ -74,21 +85,21 @@ int main(int argc, char* argv[])
             if (th[i].st_ % 2 == 0) {
                 th[i].st_++;
             }
-            th[i].is_prime_ = true;
+            th[i].can_divide_ = &can_divide;
             // print_thread_arg(th[i]);
             pthread_create(&th[i].th_, NULL, isPrime, &th[i]);
+        }
+        if (!can_divide) {
+            cout << num << " is prime" << endl;
+            times--;
+            for (size_t i = 0; i < th.size(); i++) {
+                pthread_cancel(th[i].th_);
+            }
         }
         for (size_t i = 0; i < th.size(); i++) {
             pthread_join(th[i].th_, NULL);
         }
-        bool is_prime = true;
-        for (size_t i = 0; i < th.size(); i++) {
-            if (th[i].is_prime_ == false) {
-                is_prime = false;
-                break;
-            }
-        }
-        if (is_prime) {
+        if (!can_divide) {
             cout << num << " is prime" << endl;
             times--;
         }
