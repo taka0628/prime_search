@@ -13,7 +13,8 @@ LDGFLAGS = -lpthread
 LDFLAGS = -pthread
 
 CFLAGS = -Wall\
-	-std=c++11
+	-std=c++11\
+	-O2
 
 all:
 	make ${TARGET} -j$(shell nproc)
