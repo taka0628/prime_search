@@ -1,6 +1,6 @@
 CXX = g++
 
-TARGET = benchmark.out
+TARGET = bench.out
 
 SRCS = $(shell find . -name *.cpp -type f)
 
@@ -17,7 +17,7 @@ CFLAGS = -Wall\
 	-O2
 
 all:
-	make ${TARGET} -j$(shell nproc)
+	make ${TARGET}
 
 ${TARGET}: ${OBJS}
 	${CXX} -o $@ $^ ${LDFLAGS} ${LDGFLAGS}

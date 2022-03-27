@@ -17,7 +17,7 @@ CFLAGS = -Wall\
 	-O2
 
 all:
-	make ${TARGET} -j$(shell nproc)
+	make ${TARGET}
 
 ${TARGET}: ${OBJS}
 	${CXX} -o $@ $^ ${LDFLAGS} ${LDGFLAGS}
@@ -28,8 +28,7 @@ ${OBJS}: *.cpp
 	${CXX} -c ../$^ ${CFLAGS}
 
 benchmark:
-	benchmark/make
-	benchmark/make run
+	make run -C benchmark
 
 run: ${TARGET}
 	./${TARGET}
