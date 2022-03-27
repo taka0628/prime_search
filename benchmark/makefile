@@ -1,6 +1,6 @@
 CXX = g++
 
-TARGET = main.out
+TARGET = benchmark.out
 
 SRCS = $(shell find . -name *.cpp -type f)
 
@@ -27,15 +27,8 @@ ${OBJS}: *.cpp
 	cd build;\
 	${CXX} -c ../$^ ${CFLAGS}
 
-benchmark:
-	benchmark/make
-	benchmark/make run
-
 run: ${TARGET}
 	./${TARGET}
-
-test: ${TARGET}
-	./${TARGET} 2
 
 clean:
 	rm -rf ${OBJDIR}/*.o ${TARGET}
