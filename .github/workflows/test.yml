@@ -13,10 +13,11 @@ jobs:
           sudo apt install g++
       - name: build
         run: |
+          cd prime-search &&\
           make
       - name: run
         run: |
-          cd prime-search\
+          cd prime-search &&\
           make test
   benchmark:
     runs-on: ubuntu-latest
@@ -27,8 +28,9 @@ jobs:
           sudo apt install g++
       - name: build
         run: |
+          cd benchmark &&\
           make
       - name: run
         run: |
-          cd benchmark\
+          cd benchmark &&\
           make run
