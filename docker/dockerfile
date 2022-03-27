@@ -2,7 +2,7 @@ FROM ubuntu:18.04
 
 # ユーザーを作成
 # ユーザ名はランチャーと依存関係にあるので変更する際はランチャー内のDOCKER_USER_NAMEも書き換えること
-ARG DOCKER_USER_=Docker_Guest
+ARG DOCKER_USER_=null
 
 RUN apt-get update
 
@@ -25,7 +25,8 @@ RUN update-locale LANG=ja_JP.UTF-8
 RUN apt-get update
 RUN apt-get install -y wget\
 	git\
-	g++
+	g++\
+	make
 
 ENV DIRPATH home/${DOCKER_USER_}
 WORKDIR $DIRPATH
