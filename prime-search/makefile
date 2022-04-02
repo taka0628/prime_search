@@ -2,7 +2,8 @@ CXX = g++
 
 TARGET = main.out
 
-SRCS = $(shell find . -name *.cpp -type f)
+# SRCS = $(shell find . -name "*.cpp" -type f | cut -d '/' -f 2)
+SRCS = main.cpp traceback.cpp
 
 OBJ_DIR = build
 
@@ -16,13 +17,14 @@ CFLAGS = -Wall\
 	-std=c++11\
 	-O2
 
+
 all:
 	make ${TARGET}
 
 ${TARGET}: ${OBJS}
 	${CXX} -o $@ $^ ${LDFLAGS} ${LDGFLAGS}
 
-${OBJS}: *.cpp
+${OBJ_DIR}/%.o: %.cpp
 	mkdir -p build
 	cd build;\
 	${CXX} -c ../$^ ${CFLAGS}
