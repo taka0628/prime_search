@@ -3,7 +3,8 @@ CXX = g++
 TARGET = main.out
 
 # SRCS = $(shell find . -name "*.cpp" -type f | cut -d '/' -f 2)
-SRCS = main.cpp traceback.cpp
+# SRCS = main.cpp traceback.cpp
+SRCS = main.cpp
 
 OBJ_DIR = build
 
