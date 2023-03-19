@@ -15,7 +15,7 @@ LDGFLAGS = -lpthread
 LDFLAGS = -pthread
 
 CFLAGS = -Wall\
-	-std=c++11\
+	-std=c++20\
 	-O2
 
 

@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
     cout << "you have " << thread::hardware_concurrency() << " threads" << endl;
 
     uint times = 0;
-    if (argc == 2 && argv[1] > 0) {
+    if (argc == 2 && atoi(argv[1]) > 0) {
         times = atoi(argv[1]);
     } else {
         cout << "times: ";
@@ -108,7 +108,7 @@ int main(int argc, char* argv[])
         }
         if (!can_divide) {
             cout << "\r"
-                 << num << " is prime" << string(10, ' ') << endl;
+                << num << " is prime" << string(10, ' ') << endl;
             times--;
         }
     }
